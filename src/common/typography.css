@@ -45,7 +45,7 @@
         color: #222;
     }
 
-    .red {
+    &.red {
         color: #ed4c5c;
     }
 }
