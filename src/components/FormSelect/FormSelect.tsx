@@ -1,37 +1,54 @@
 import { useFormContext } from "react-hook-form";
 
 import "./FormSelect.css";
+import { FocusEvent, useState } from "react";
 
-type SelectOption = {
+export type SelectOption = {
     key: string;
 
     name: string;
 };
 
 interface IFormSelect {
-    // currentValue?: string;
+    className?: string;
 
-    // defaultValue?: string;
+    displayName?: string;
 
-    displayText?: string;
-
-    name: string;
+    inputName: string;
 
     values: SelectOption[];
 }
 
-const FormSelect = ({ displayText, name, values }: IFormSelect) => {
-    const {
-        register,
-        // formState: { errors },
-    } = useFormContext();
-    console.log(name);
+const FormSelect = ({ className = "", displayName, inputName, values }: IFormSelect) => {
+    const { register } = useFormContext();
+
+    const [selectClasses, setSelectClasses] = useState<string[]>([
+        "text m w300 select",
+        className,
+        "default",
+    ]);
+
+    const addDefaultClass = () => setSelectClasses(["text m w300 select", className, "default"]);
+    const removeDefaultClass = () => setSelectClasses(["text m w300 select", className]);
+
+    const onFocus = () => removeDefaultClass();
+    const onBlur = (e: FocusEvent<HTMLSelectElement>) => {
+        const { value } = e.target;
+        if (value === "") addDefaultClass();
+    };
 
     return (
-        <select {...register(name)} className="text m w300 select">
+        <select
+            {...register(inputName)}
+            name={inputName}
+            className={selectClasses.filter((c) => c !== "").join(" ")}
+            onBlur={onBlur}
+            onFocus={onFocus}
+            defaultValue=""
+        >
             {/* default option display (option with no value, just visibility display) */}
-            <option value="" className="text sm w600">
-                {displayText || name}
+            <option value="" disabled>
+                {displayName || inputName}
             </option>
 
             {/* render all options for the select */}

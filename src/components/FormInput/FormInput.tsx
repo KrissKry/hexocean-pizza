@@ -35,9 +35,13 @@ const FormInput = ({ displayName, inputName, pattern, required }: FormInputProps
 
     return (
         <div className="forminput flex column">
-            <label className="text s w400 label">{displayName || inputName}</label>
+            {/* <label className="text s w400 label">{displayName || inputName}</label> */}
 
-            <input {...register(inputName, { pattern, required })} className="input" />
+            <input
+                {...register(inputName, { pattern, required })}
+                className="input"
+                placeholder={displayName || ""}
+            />
 
             <ErrorMessage
                 errors={errors}
