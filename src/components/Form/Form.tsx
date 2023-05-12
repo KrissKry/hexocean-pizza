@@ -1,21 +1,23 @@
 import { PropsWithChildren } from "react";
-import { FieldErrors, FieldValues, FormProvider, useForm } from "react-hook-form";
+import { FieldErrors, FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 
 interface FormProps<T> {
-    onSuccess: (data: T) => void;
+    onSuccess: (data: unknown) => void;
 
     onError?: (errors: FieldErrors<FieldValues>) => void;
 
     className?: string;
+
+    methods: UseFormReturn;
 }
 
 const Form = <T extends FieldValues>(props: PropsWithChildren & FormProps<T>) => {
-    const methods = useForm<T>();
+    // const methods = useForm<T>();
 
     return (
-        <FormProvider {...methods}>
+        <FormProvider {...props.methods}>
             <form
-                onSubmit={methods.handleSubmit(props.onSuccess, props.onError)}
+                onSubmit={props.methods.handleSubmit(props.onSuccess, props.onError)}
                 className={props.className}
             >
                 {props.children}

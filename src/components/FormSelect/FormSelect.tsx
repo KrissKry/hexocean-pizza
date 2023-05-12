@@ -2,12 +2,7 @@ import { useFormContext } from "react-hook-form";
 
 import "./FormSelect.css";
 import { FocusEvent, useState } from "react";
-
-export type SelectOption = {
-    key: string;
-
-    name: string;
-};
+import { SelectOption } from "../../types/select";
 
 interface IFormSelect {
     className?: string;

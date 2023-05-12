@@ -3,50 +3,107 @@ import { ErrorMessage } from "@hookform/error-message";
 
 import "./FormInput.css";
 
-export type RequiredRule = {
-    value: boolean;
-
+interface IRule {
+    value: unknown;
     message: string;
-};
-
-export type RegExpRule = {
-    value: RegExp;
-
-    message: string;
-};
-
-export interface FormInputProps {
-    displayName?: string;
-
-    inputName: string;
-
-    /** @default undf */
-    required?: RequiredRule;
-
-    /** @default undf */
-    pattern?: RegExpRule;
 }
 
-const FormInput = ({ displayName, inputName, pattern, required }: FormInputProps): JSX.Element => {
+interface INumRule extends IRule {
+    value: number;
+}
+
+interface IRegexRule extends IRule {
+    value: RegExp;
+}
+
+interface IBoolRule extends IRule {
+    value: boolean;
+}
+
+export interface FormInputProps {
+    disabled?: boolean;
+
+    /**
+     * Come on, it's literally in the name of the variable
+     */
+    placeholder?: string;
+
+    /**
+     * name of input used as reference in the form (for submit and watch purposes)
+     */
+    inputName: string;
+
+    /** @default string */
+    type?: "number" | "string" | "time";
+
+    /**
+     * Used with type=number, min,max value
+     */
+    min?: INumRule;
+    max?: INumRule;
+
+    /**
+     * Used with type=string, min,max string length
+     */
+    minLength?: INumRule;
+    maxLength?: INumRule;
+
+    /**
+     * used with type=time
+     */
+    step?: number;
+
+    /** @default undf */
+    required?: IBoolRule;
+
+    /** @default undf */
+    pattern?: IRegexRule;
+}
+
+const FormInput = ({
+    disabled = false,
+    inputName,
+    max,
+    maxLength,
+    min,
+    minLength,
+    placeholder,
+    pattern,
+    required,
+    step,
+    type = "string",
+}: FormInputProps): JSX.Element => {
     const {
         register,
         formState: { errors },
     } = useFormContext();
 
-    return (
-        <div className="forminput flex column">
-            {/* <label className="text s w400 label">{displayName || inputName}</label> */}
+    const inputAttr =
+        type === "string"
+            ? Object.assign(
+                  {},
+                  pattern && { pattern },
+                  maxLength && { maxLength },
+                  minLength && { minLength },
+              )
+            : Object.assign({}, min && { min }, max && { max });
 
+    return (
+        <div className="forminput flex column margin-v05">
             <input
-                {...register(inputName, { pattern, required })}
+                {...register(inputName, { ...inputAttr, required, disabled })}
                 className="input"
-                placeholder={displayName || ""}
+                placeholder={placeholder || ""}
+                step={step ?? undefined}
+                type={type}
             />
 
             <ErrorMessage
                 errors={errors}
                 name={inputName}
-                render={({ message }) => <p className="text s err error">{message}</p>}
+                render={({ message }) => (
+                    <p className="text s red margin-v05 margin-h05">{message}</p>
+                )}
             />
         </div>
     );
