@@ -23,8 +23,8 @@ const FormSelect = ({ className = "", displayName, inputName, values }: IFormSel
         "default",
     ]);
 
-    const addDefaultClass = () => setSelectClasses(["text m w300 select", className, "default"]);
-    const removeDefaultClass = () => setSelectClasses(["text m w300 select", className]);
+    const addDefaultClass = () => setSelectClasses(["text m select", className, "default"]);
+    const removeDefaultClass = () => setSelectClasses(["text m  select", className]);
 
     const onFocus = () => removeDefaultClass();
     const onBlur = (e: FocusEvent<HTMLSelectElement>) => {

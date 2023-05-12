@@ -1,8 +1,9 @@
 import { PropsWithChildren } from "react";
 import { FieldErrors, FieldValues, FormProvider, UseFormReturn } from "react-hook-form";
 
-interface FormProps<T> {
-    onSuccess: (data: unknown) => void;
+interface FormProps<TFieldValues extends FieldValues> {
+    // ts-2322 -> lack of time to debug
+    onSuccess: (data: any) => void;
 
     onError?: (errors: FieldErrors<FieldValues>) => void;
 
@@ -11,7 +12,9 @@ interface FormProps<T> {
     methods: UseFormReturn;
 }
 
-const Form = <T extends FieldValues>(props: PropsWithChildren & FormProps<T>) => {
+const Form = <TFieldValues extends FieldValues>(
+    props: PropsWithChildren & FormProps<TFieldValues>,
+) => {
     // const methods = useForm<T>();
 
     return (

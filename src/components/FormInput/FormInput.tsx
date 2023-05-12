@@ -8,7 +8,7 @@ interface IRule {
     message: string;
 }
 
-interface INumRule extends IRule {
+export interface INumRule extends IRule {
     value: number;
 }
 
@@ -21,6 +21,8 @@ interface IBoolRule extends IRule {
 }
 
 export interface FormInputProps {
+    className?: string;
+
     disabled?: boolean;
 
     /**
@@ -61,6 +63,7 @@ export interface FormInputProps {
 }
 
 const FormInput = ({
+    className = "",
     disabled = false,
     inputName,
     max,
@@ -92,7 +95,7 @@ const FormInput = ({
         <div className="forminput flex column margin-v05">
             <input
                 {...register(inputName, { ...inputAttr, required, disabled })}
-                className="input"
+                className={`input ${className}`}
                 placeholder={placeholder || ""}
                 step={step ?? undefined}
                 type={type}
