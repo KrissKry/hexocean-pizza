@@ -33,3 +33,9 @@ export type SoupType = Required<Omit<ISoup, "no_of_slices" | "diameter" | "slice
 export type SandwichType = Required<
     Omit<ISandwich, "no_of_slices" | "diameter" | "spiciness_scale">
 >;
+
+export type TimeFractions = {
+    prep_h: number;
+    prep_m: number;
+    prep_s: number;
+};
