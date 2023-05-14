@@ -1,3 +1,3 @@
-import { mealInputs, mealOptions } from "./meals";
+import { mealInputs, mealOptions, timeContraints } from "./meals";
 
-export { mealInputs, mealOptions };
+export { mealInputs, mealOptions, timeContraints };

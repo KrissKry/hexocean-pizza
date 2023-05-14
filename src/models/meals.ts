@@ -110,3 +110,14 @@ export const mealInputs = {
     soupInputs,
     sandwichInputs,
 };
+
+export const timeContraints = {
+    min: {
+        value: 0,
+        message: "Ujemny czas!",
+    },
+    max: {
+        value: 59,
+        message: "Zbyt duży czas",
+    },
+};

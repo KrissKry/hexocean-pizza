@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 import Button from "../components/Button";
 import Form from "../components/Form";
 import FormInput from "../components/FormInput";
 import FormSelect from "../components/FormSelect";
 
-import { mealInputs, mealOptions } from "../models";
+import { mealInputs, mealOptions, timeContraints } from "../models";
 import { IDish, DishType, TimeFractions, IAPIDish } from "../types/meals";
 import { prepareMealData } from "../util";
 import { instanceOfIDish, instanceOfTimeFractions } from "../types/meal.typeguard";
@@ -21,7 +21,7 @@ const FormSection = (): JSX.Element => {
     const mutation = useMutation({
         mutationFn: (meal: IDish) => {
             return axios.post(
-                "https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/ ",
+                "https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/",
                 meal,
             );
         },
@@ -36,17 +36,6 @@ const FormSection = (): JSX.Element => {
             // send request
             mutation.mutate({ ...preparedMeal });
         }
-    };
-
-    const timeContraints = {
-        min: {
-            value: 0,
-            message: "Ujemny czas!",
-        },
-        max: {
-            value: 59,
-            message: "Zbyt duży czas",
-        },
     };
 
     return (
@@ -129,22 +118,31 @@ const FormSection = (): JSX.Element => {
                     <>
                         <p className="text m w500">Error!</p>
 
-                        <p className="text s w300 red">{mutation.error as string}</p>
+                        <p className="text s red margin-v1">
+                            {(mutation.error as AxiosError).message}
+                        </p>
+
+                        <p className="text s red">
+                            KOD: <b className="w600">{(mutation.error as AxiosError).code}</b>
+                        </p>
                     </>
                 )}
 
                 {/* data display */}
                 {mutation.isSuccess && (
-                    <div>
+                    <>
                         <p className="text m w500">Success!</p>
-                        {JSON.stringify(recvData, null, 4)
-                            .split(",")
-                            .map((i) => (
-                                <p className="text s w300" key={i}>
-                                    {i}
-                                </p>
-                            ))}
-                    </div>
+
+                        <div className="margin-v1">
+                            {JSON.stringify(recvData, null, 4)
+                                .split(",")
+                                .map((i) => (
+                                    <p className="text s w300" key={i}>
+                                        {i}
+                                    </p>
+                                ))}
+                        </div>
+                    </>
                 )}
             </div>
         </div>
