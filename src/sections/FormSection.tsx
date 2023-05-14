@@ -8,10 +8,10 @@ import Form from "../components/Form";
 import FormInput from "../components/FormInput";
 import FormSelect from "../components/FormSelect";
 
-import { mealInputs, mealOptions, timeContraints } from "../models";
-import { IDish, DishType, TimeFractions, IAPIDish } from "../types/meals";
-import { prepareMealData } from "../util";
-import { instanceOfIDish, instanceOfTimeFractions } from "../types/meal.typeguard";
+import { dishInputs, dishOptions, timeContraints } from "../models";
+import { IDish, DishType, TimeFractions, IAPIDish } from "../types/dishes";
+import { prepareDishData } from "../util";
+import { instanceOfIDish, instanceOfTimeFractions } from "../types/dish.typeguard";
 
 import "./FormSection.css";
 
@@ -19,10 +19,10 @@ const FormSection = (): JSX.Element => {
     const methods = useForm();
     const type: DishType = methods.watch("type");
     const mutation = useMutation({
-        mutationFn: (meal: IDish) => {
+        mutationFn: (dish: IDish) => {
             return axios.post(
                 "https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/",
-                meal,
+                dish,
             );
         },
         onSuccess(data) {
@@ -31,10 +31,13 @@ const FormSection = (): JSX.Element => {
     });
     const [recvData, setRecvData] = useState<IAPIDish>();
     const onSubmit = (data: unknown): void => {
+        /* Typeguard data */
         if (instanceOfIDish(data) && instanceOfTimeFractions(data)) {
-            const preparedMeal = prepareMealData(data);
-            // send request
-            mutation.mutate({ ...preparedMeal });
+            /* Prepare dish data for network request*/
+            const preparedDish = prepareDishData(data);
+
+            /* Send request with dish data*/
+            mutation.mutate({ ...preparedDish });
         }
     };
 
@@ -66,23 +69,23 @@ const FormSection = (): JSX.Element => {
                     />
                 </div>
 
-                <FormSelect inputName="type" displayName="Rodzaj dania" values={mealOptions} />
+                <FormSelect inputName="type" displayName="Rodzaj dania" values={dishOptions} />
 
                 {/* CONDITIONAL INPUT RENDERING */}
                 <div style={{ display: type !== "pizza" ? "none" : "inherit" }}>
-                    {mealInputs.pizzaInputs.map((i) => (
+                    {dishInputs.pizzaInputs.map((i) => (
                         <FormInput key={i.inputName} {...i} disabled={type !== "pizza"} />
                     ))}
                 </div>
 
                 <div style={{ display: type !== "soup" ? "none" : "inherit" }}>
-                    {mealInputs.soupInputs.map((i) => (
+                    {dishInputs.soupInputs.map((i) => (
                         <FormInput key={i.inputName} {...i} disabled={type !== "soup"} />
                     ))}
                 </div>
 
                 <div style={{ display: type !== "sandwich" ? "none" : "inherit" }}>
-                    {mealInputs.sandwichInputs.map((i) => (
+                    {dishInputs.sandwichInputs.map((i) => (
                         <FormInput key={i.inputName} {...i} disabled={type !== "sandwich"} />
                     ))}
                 </div>

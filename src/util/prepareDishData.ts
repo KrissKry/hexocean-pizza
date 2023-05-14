@@ -1,8 +1,8 @@
-import { IDish, TimeFractions } from "../types/meals";
+import { IDish, TimeFractions } from "../types/dishes";
 import { combineTimeString } from "./combineTimeString";
 
 /** This whole function makes me sad :c. Lack of time to write in a better way */
-export const prepareMealData = (e: IDish & TimeFractions): IDish => {
+export const prepareDishData = (e: IDish & TimeFractions): IDish => {
     /* get time string */
     const preparation_time = combineTimeString(e.prep_h, e.prep_m, e.prep_s);
 

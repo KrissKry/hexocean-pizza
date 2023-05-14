@@ -1,4 +1,4 @@
-import { IDish, TimeFractions } from "./meals";
+import { IDish, TimeFractions } from "./dishes";
 
 export const instanceOfIDish = (data: unknown): data is IDish => {
     return (

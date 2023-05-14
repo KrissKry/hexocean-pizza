@@ -1,7 +1,7 @@
 import { FormInputProps } from "../components/FormInput/FormInput";
 import { SelectOption } from "../types/select";
 
-export const mealOptions: SelectOption[] = [
+export const dishOptions: SelectOption[] = [
     {
         key: "pizza",
         name: "pizza",
@@ -105,7 +105,7 @@ const sandwichInputs: FormInputProps[] = [
     },
 ];
 
-export const mealInputs = {
+export const dishInputs = {
     pizzaInputs,
     soupInputs,
     sandwichInputs,

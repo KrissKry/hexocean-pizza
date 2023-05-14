@@ -1,4 +1,4 @@
 import { combineTimeString } from "./combineTimeString";
-import { prepareMealData } from "./prepareMealData";
+import { prepareDishData } from "./prepareDishData";
 
-export { combineTimeString, prepareMealData };
+export { combineTimeString, prepareDishData };
