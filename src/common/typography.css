@@ -1,0 +1,51 @@
+.text {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+
+    /* WEIGHT */
+    &.w300 {
+        font-weight: 300;
+    }
+
+    &.w400 {
+        font-weight: 400;
+    }
+
+    &.w500 {
+        font-weight: 500;
+    }
+
+    &.w600 {
+        font-weight: 600;
+    }
+
+    &.w700 {
+        font-weight: 700;
+    }
+
+    /* EXTRAS */
+    &.cntr {
+        text-align: center;
+    }
+
+    &.i {
+        font-style: italic;
+    }
+
+    &.uppercase {
+        text-transform: uppercase;
+    }
+
+    &.ff {
+        color: white;
+    }
+
+    &.grey--dark {
+        color: #222;
+    }
+
+    &.red {
+        color: #ed4c5c;
+    }
+}
