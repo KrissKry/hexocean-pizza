@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 import Button from "../components/Button";
 import Form from "../components/Form";
@@ -6,7 +9,7 @@ import FormInput from "../components/FormInput";
 import FormSelect from "../components/FormSelect";
 
 import { mealInputs, mealOptions } from "../models";
-import { IDish, DishType, TimeFractions } from "../types/meals";
+import { IDish, DishType, TimeFractions, IAPIDish } from "../types/meals";
 import { prepareMealData } from "../util";
 import { instanceOfIDish, instanceOfTimeFractions } from "../types/meal.typeguard";
 
@@ -15,11 +18,23 @@ import "./FormSection.css";
 const FormSection = (): JSX.Element => {
     const methods = useForm();
     const type: DishType = methods.watch("type");
-
+    const mutation = useMutation({
+        mutationFn: (meal: IDish) => {
+            return axios.post(
+                "https://umzzcc503l.execute-api.us-west-2.amazonaws.com/dishes/ ",
+                meal,
+            );
+        },
+        onSuccess(data) {
+            setRecvData(data.data);
+        },
+    });
+    const [recvData, setRecvData] = useState<IAPIDish>();
     const onSubmit = (data: unknown): void => {
         if (instanceOfIDish(data) && instanceOfTimeFractions(data)) {
             const preparedMeal = prepareMealData(data);
             // send request
+            mutation.mutate({ ...preparedMeal });
         }
     };
 
@@ -33,8 +48,10 @@ const FormSection = (): JSX.Element => {
             message: "Zbyt duży czas",
         },
     };
+
     return (
         <div className="form-wrapper">
+            {/* FORM DISPLAY */}
             <Form<IDish & TimeFractions> onSuccess={onSubmit} className="form" methods={methods}>
                 <FormInput inputName="name" type="string" placeholder="nazwa dania" />
 
@@ -62,6 +79,7 @@ const FormSection = (): JSX.Element => {
 
                 <FormSelect inputName="type" displayName="Rodzaj dania" values={mealOptions} />
 
+                {/* CONDITIONAL INPUT RENDERING */}
                 <div style={{ display: type !== "pizza" ? "none" : "inherit" }}>
                     {mealInputs.pizzaInputs.map((i) => (
                         <FormInput key={i.inputName} {...i} disabled={type !== "pizza"} />
@@ -80,16 +98,55 @@ const FormSection = (): JSX.Element => {
                     ))}
                 </div>
 
-                <Button
-                    type="submit"
-                    text="submit"
-                    uppercase
-                    thin
-                    primary
-                    hover
-                    className="margin-v1"
-                />
+                {/* SUBMIT */}
+                <div className="flex just-c">
+                    <Button
+                        type="submit"
+                        text="submit"
+                        uppercase
+                        thin
+                        primary
+                        hover
+                        className="margin-v1"
+                        disabled={mutation.isLoading}
+                    />
+                </div>
             </Form>
+
+            {/* STATUS DISPLAY  */}
+            <div className="flex column al-c margin-v2">
+                {/* loading POST */}
+                {mutation.isLoading && (
+                    <>
+                        <p className="text i s">Czekanie na odpowiedź API...</p>
+
+                        <div className="lds-dual-ring margin-v1"></div>
+                    </>
+                )}
+
+                {/* error on POST */}
+                {mutation.isError && (
+                    <>
+                        <p className="text m w500">Error!</p>
+
+                        <p className="text s w300 red">{mutation.error as string}</p>
+                    </>
+                )}
+
+                {/* data display */}
+                {mutation.isSuccess && (
+                    <div>
+                        <p className="text m w500">Success!</p>
+                        {JSON.stringify(recvData, null, 4)
+                            .split(",")
+                            .map((i) => (
+                                <p className="text s w300" key={i}>
+                                    {i}
+                                </p>
+                            ))}
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

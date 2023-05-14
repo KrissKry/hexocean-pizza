@@ -16,6 +16,10 @@ export interface IDish {
     slices_of_bread?: number;
 }
 
+export interface IAPIDish extends IDish {
+    id: number;
+}
+
 interface IPizza extends IDish {
     type: "pizza";
 }
